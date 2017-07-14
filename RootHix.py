@@ -281,6 +281,7 @@ class helical_transform:
 		splx.set_smoothing_factor(1000000)
 		sply.set_smoothing_factor(1000000)
 
+		
 		spacing_knots = np.abs(Z[0]-Z[-1]) / 10.
 		T = np.array([(Z[0]+Z[-1])/2.])#sply.get_knots()#np.linspace(Z[0], Z[-1], np.abs(Z[0]-Z[-1]) / spacing_knots)
 
@@ -351,15 +352,26 @@ class helical_transform:
 		f.write("Frequency:," + str(self.RBF_param[4]) + "\n") 
 		f.write("Amplitude Oscillation:," + str(np.sqrt(self.RBF_param[2])) + "\n") 
 		
+		# Export minima
+		CURV, POS = self.get_curvature()
+
+		X, Y, Z = self.IN
+		f.write("position and curvature of switches\n")
+		f.write("X,Y,Z,Curvature\n")
+		for i in range(len(POS)):
+				f.write(str(X[POS[i]]) + "," +str(Y[POS[i]]) + "," +str(Z[POS[i]]) + "," +str(CURV[POS[i]]) + "\n" )
+
 		f.close()
 		
+		# Export minima
+				
 		# Export trajectory
-		exp_file = (path.split('.'))[0] + "_traj.txt"		
-		f = open(exp_file, "w")
-		X, Y, Z = self.IN
-		for i in range(len(X)):
-			f.write(str(X[i]) + " , " + str(Y[i]) + " , " + str(Z[i])+"\n")
-		f.close()
+		#exp_file = (path.split('.'))[0] + "_traj.txt"		
+		#f = open(exp_file, "w")
+		#X, Y, Z = self.IN
+		#for i in range(len(X)):
+		#	f.write(str(X[i]) + " , " + str(Y[i]) + " , " + str(Z[i])+"\n")
+		#f.close()
 		
 	def get_curvature(self):
 		CURV = []
@@ -730,7 +742,6 @@ class MyFrame(wx.Frame):
 					self.C.run()
 					self.panel.draw()
 					self.SetTitle('ROOTHIX - ' + os.path.basename(path))
-
 		
 app = wx.App(False)
 
